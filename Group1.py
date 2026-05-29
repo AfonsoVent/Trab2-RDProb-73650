@@ -3,20 +3,32 @@ from pysat.card import CardEnc, EncType
 from pysat.solvers import Glucose42
 
 def TillingProblem(n, maxW, maxH):
+    # TODO: remove (inutil)
     # Create pieces
-    pieces = ConstructPieces(n)
+    # pieces = ConstructPieces(n)
+
+    if n > maxW or n > maxH:
+        print("UNSAT")
+        return [] # Return list empty (Project 1 requirement)
     
     # Instantiate vars
     pool = IDPool()
+    # TODO: remove (was debug)
     varsIds = []
     for p in range(n):
         pieceId = p + 1
-        for w in range(maxW):
-            for h in range(maxH):
+        # TODO: remove (I have a better code now)
+        # if((maxW - pieceId + 1) <= 0): return print("UNSAT")
+        # if((maxH - pieceId + 1) <= 0): return print("UNSAT")
+        for w in range(maxW - pieceId + 1): # Already removing some impossible tiling pieces
+            for h in range(maxH - pieceId + 1): # Already removing some impossible tiling pieces
+                # pool.id(f"piece {pieceId} has origin at (x:{w}, y:{h})")
+                # TODO: remove (was debug)
                 varsIds.append([pool.id(f"piece {pieceId} has origin at (x:{w}, y:{h})"), (f"piece {pieceId} has origin at (x:{w}, y:{h})")])
 
-    print(varsIds)
-    # Check 
+    # TODO: remove (was debug)
+    for idx, val in enumerate(varsIds):
+        print(val)
 
 def ConstructPieces(nBlocks):
     pieces = []
@@ -80,8 +92,8 @@ def Pigeonhole(n):
         if sat:
             print(solver.get_model())
 
-print("Para problema n = 3")
-TillingProblem(2, 2, 2)
+
+TillingProblem(3, 2, 2)
 
 # print("Para problema n = 200")
 # Pigeonhole(200)
