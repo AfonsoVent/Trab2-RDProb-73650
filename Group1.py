@@ -20,13 +20,34 @@ def TillingProblem(n, maxW, maxH):
     
     # At Least 1: Each piece needs to be somewhere
     for p in range(n): # pieces
+        pieceId = p + 1
         clause = []
-        for w in range(maxW - pieceId + 1):
-            for h in range(maxH - pieceId + 1):
-                clause.append(x[p, w, h]) # (x[PieceX, 0, 0] ∨ ... ∨ x[PieceX, (maxW - pieceId + 1), (maxH - pieceId + 1)])
+        for w in range(maxW - pieceId + 1): # width
+            for h in range(maxH - pieceId + 1): # heigth
+                clause.append(x[pieceId, w, h]) # (x[PieceX, 0, 0] ∨ ... ∨ x[PieceX, (maxW - pieceId + 1), (maxH - pieceId + 1)])
         clauses.append(clause) # (x[1, _, _] ∧ ... ∧ x[p, _, _])
 
-    # At Most 1: Two pieces can't be place on the same place
+    # At Most 1: One piece can't be place on 2 places
+    for p in range(n): # pieces
+        pieceId = p + 1
+
+        # Creating every piece with position
+        pieceVars = []
+        for w in range(maxW - pieceId + 1): # width
+            for h in range(maxH - pieceId + 1): # heigth
+                pieceVars.append(x[pieceId, w, h])
+
+        # Then we apply per pairs
+        numVars = len(pieceVars)
+        for i in range(numVars): # PieceX on Pos1
+            for j in range(i + 1, numVars): # PieceX on Pos2
+                clauses.append([-pieceVars[i], -pieceVars[j]]) # (~x[PieceX, (Pos1)] ∨ ~x[PieceX, (Pos2)]) ∧ (~x[PieceX, (Pos2)] ∨ ~x[PieceX, (Pos3)]) ∧ ...
+ 
+
+
+
+
+
 
 
 def ConstructPieces(nBlocks):
