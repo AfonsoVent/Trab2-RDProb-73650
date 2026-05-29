@@ -3,9 +3,7 @@ from pysat.card import CardEnc, EncType
 from pysat.solvers import Glucose42
 
 def TillingProblem(n, maxW, maxH):
-    # TODO: remove (inutil)
-    # Create pieces
-    # pieces = ConstructPieces(n)
+    clauses = []
 
     if n > maxW or n > maxH:
         print("UNSAT")
@@ -13,22 +11,23 @@ def TillingProblem(n, maxW, maxH):
     
     # Instantiate vars
     pool = IDPool()
-    # TODO: remove (was debug)
-    varsIds = []
-    for p in range(n):
+    x = {}
+    for p in range(n): # pieces
         pieceId = p + 1
-        # TODO: remove (I have a better code now)
-        # if((maxW - pieceId + 1) <= 0): return print("UNSAT")
-        # if((maxH - pieceId + 1) <= 0): return print("UNSAT")
         for w in range(maxW - pieceId + 1): # Already removing some impossible tiling pieces
             for h in range(maxH - pieceId + 1): # Already removing some impossible tiling pieces
-                # pool.id(f"piece {pieceId} has origin at (x:{w}, y:{h})")
-                # TODO: remove (was debug)
-                varsIds.append([pool.id(f"piece {pieceId} has origin at (x:{w}, y:{h})"), (f"piece {pieceId} has origin at (x:{w}, y:{h})")])
+                x[pieceId, w, h] = pool.id(f"piece {pieceId} has origin at (x:{w}, y:{h})")
+    
+    # At Least 1: Each piece needs to be somewhere
+    for p in range(n): # pieces
+        clause = []
+        for w in range(maxW - pieceId + 1):
+            for h in range(maxH - pieceId + 1):
+                clause.append(x[p, w, h]) # (x[PieceX, 0, 0] ∨ ... ∨ x[PieceX, (maxW - pieceId + 1), (maxH - pieceId + 1)])
+        clauses.append(clause) # (x[1, _, _] ∧ ... ∧ x[p, _, _])
 
-    # TODO: remove (was debug)
-    for idx, val in enumerate(varsIds):
-        print(val)
+    # At Most 1: Two pieces can't be place on the same place
+
 
 def ConstructPieces(nBlocks):
     pieces = []
