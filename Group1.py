@@ -43,61 +43,22 @@ def TillingProblem(n, maxW, maxH):
             for j in range(i + 1, numVars): # PieceX on Pos2
                 clauses.append([-pieceVars[i], -pieceVars[j]]) # (~x[PieceX, (Pos1)] ∨ ~x[PieceX, (Pos2)]) ∧ (~x[PieceX, (Pos2)] ∨ ~x[PieceX, (Pos3)]) ∧ ...
  
-
-
-
-
-
-
-
-def ConstructPieces(nBlocks):
-    pieces = []
-    for i in range(nBlocks):
-        pieces.append([i + 1, i + 1])
-
-    return pieces
-
-
-
-
-# Pingeon Lab: (Para referencia, q ja fiz algo moldavel)
-
-def Pigeonhole(n):
-    pool = IDPool()
-    n_vars = n * (n + 1)
-    clauses = []
-
-    x = [pool.id(f'x{i}') for i in range(1, n_vars + 1)]
-
-    # Notice: This is Support Enconding
-
-    # Each var needs 1 value (a)
-    for i in range(n + 1):
-        clause = []
-        for j in range(n):
-            clause.append(x[i * n + j]) # (x[v, 0] ∨ (...) ∨ x[v, n])
-        clauses.append(clause)
+    # Conflict Clauses: One piece must not overlap another
+    for p1 in range(n):
+        id1 = p1 + 1
+        for p2 in range(p1 + 1, n):
+            id2 = p2 + 1
+            
+            # On each position...
+            for x1 in range(maxW - id1 + 1):
+                for y1 in range(maxH - id1 + 1):
+                    for x2 in range(maxW - id2 + 1):
+                        for y2 in range(maxH - id2 + 1):
+                            # ... check if collide
+                            if overlap(id1, x1, y1, id2, x2, y2):
+                                # Then express Conflict Clauses → [Pairwise Enconding Logic]
+                                clauses.append([-x[id1, x1, y1], -x[id2, x2, y2]])
     
-    # Each var only has one value (b)
-    for i in range(n + 1): # vars
-        for j in range(n): # holes
-            for l in range(j + 1, n):
-                clauses.append([-x[i * n + j], -x[i * n + l]]) # (~x[v, i] ∨ ~x[v, j])
-
-    # Support clauses (c)
-    for i in range(n + 1): # vars
-        for j in range(i, n + 1): # vars
-            if i == j: 
-                continue
-            for l in range(n): # values
-                clause = [-x[j * n + l]]
-
-                for k in range(l, n): # values
-                    if k != l:
-                        clause.append(x[i * n + k])
-                clauses.append(clause)
-
-
     with Glucose42() as solver:
         # Add each clause on solver
         for c in clauses: solver.add_clause(c)
@@ -108,12 +69,19 @@ def Pigeonhole(n):
         # Check if exists solution
         print("SAT" if sat else "UNSAT")
         
+        # TODO: make a better printer
         # Print Solution
         if sat:
             print(solver.get_model())
 
+# check if collide
+def overlap(size1, x1, y1, size2, x2, y2):
+    goodOnX = (x1 + size1 <= x2) or (x2 + size2 <= x1)
+    goodOnY = (y1 + size1 <= y2) or (y2 + size2 <= y1)
+    return not (goodOnX or goodOnY)
 
-TillingProblem(3, 2, 2)
+
+TillingProblem(5, 9, 7)
 
 # print("Para problema n = 200")
 # Pigeonhole(200)
