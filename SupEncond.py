@@ -2,8 +2,8 @@ from pysat.formula import CNF, IDPool
 from pysat.card import CardEnc, EncType
 from pysat.solvers import Glucose42
 
-# Direct Enconding
-def TillingProblemDirect(n, maxW, maxH):
+# Support Enconding
+def TillingProblemSupport(n, maxW, maxH):
     clauses = []
 
     if n > maxW or n > maxH:
@@ -19,24 +19,26 @@ def TillingProblemDirect(n, maxW, maxH):
     # At Most 1: One piece can't be place on 2 places
     AM1(clauses, x, n, maxW, maxH)
 
-    # Conflict Clauses: One piece must not overlap another
-    for p1 in range(n):
+    # Support Clauses (From Lab 1)
+    for p1 in range(n): # pieces
         id1 = p1 + 1
-        for p2 in range(p1 + 1, n):
+        for p2 in range(p1 + 1, n): # pieces
             id2 = p2 + 1
-            
-            # On each position...
-            for x1 in range(maxW - id1 + 1):
-                for y1 in range(maxH - id1 + 1):
-                    for x2 in range(maxW - id2 + 1):
-                        for y2 in range(maxH - id2 + 1):
-                            # ... check if collide
-                            if overlap(id1, x1, y1, id2, x2, y2):
-                                # Then express Conflict Clauses → [Pairwise Enconding Logic]
-                                clauses.append([-x[id1, x1, y1], -x[id2, x2, y2]])
+
+            for x1 in range(maxW - id1 + 1): # width
+                for y1 in range(maxH - id1 + 1): # heigth
+                    clause = [-x[id1, x1, y1]] # (¬x[piece1, (Pos1)] ∨ (...)) 
+
+                    for x2 in range(maxW - id2 + 1): # width
+                        for y2 in range(maxH - id2 + 1): # heigth
+                            # If not overlaping then can be support var
+                            if not overlap(id1, x1, y1, id2, x2, y2):
+                                clause.append(x[id2, x2, y2]) # ((...) ∨ x[piece2, (Pos2)] ∨ x[piece2, (Pos3)]  ∨ (...))
+                        clauses.append(clause) # (¬x[piece1, (Pos1)] ∨ x[piece2, (Pos2)] ∨ (...)) ∧ (...) ∧ (¬x[piece2, (Pos1)] ∨ x[piece3, (Pos2)]
     
     # Try solve and if SAT print
     solverPrinter(clauses, x, maxW, maxH)
+
 
 def AL1(clauses, x, n, maxW, maxH):
     for p in range(n): # pieces
@@ -127,5 +129,5 @@ def overlap(size1, x1, y1, size2, x2, y2):
 
 print("Tiling Problem(5, 9, 7):")
 
-print("Direct:")
-TillingProblemDirect(5, 9, 7)
+print("Support:")
+TillingProblemSupport(5, 9, 7)
