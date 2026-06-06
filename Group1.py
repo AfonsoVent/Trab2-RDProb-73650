@@ -20,33 +20,20 @@ def TillingProblemSupport(n, maxW, maxH):
     AM1(clauses, x, n, maxW, maxH)
 
     # Support Clauses (From Lab 1)
-    # for i in range(n + 1): # vars
-    #     for j in range(i, n + 1): # vars
-    #         if i == j: 
-    #             continue
-    #         for l in range(n): # values
-    #             clause = [-x[j * n + l]]
-
-    #             for k in range(l, n): # values
-    #                 if k != l:
-    #                     clause.append(x[i * n + k])
-    #             clauses.append(clause)
-    
-
-    for p1 in range(n + 1): # pieces
+    for p1 in range(n): # pieces
         id1 = p1 + 1
-        for p2 in range(p1 + 1, n + 1): # pieces
+        for p2 in range(p1 + 1, n): # pieces
             id2 = p2 + 1
 
             for x1 in range(maxW - id1 + 1): # width
                 for y1 in range(maxH - id1 + 1): # heigth
-                    clause = [-x[p1, x1, y1]] # (¬x[piece1, (Pos1)] ∨ (...)) 
+                    clause = [-x[id1, x1, y1]] # (¬x[piece1, (Pos1)] ∨ (...)) 
 
                     for x2 in range(maxW - id2 + 1): # width
                         for y2 in range(maxH - id2 + 1): # heigth
                             # If not overlaping then can be support var
                             if not overlap(id1, x1, y1, id2, x2, y2):
-                                clause.append(x[p2, x2, y2]) # ((...) ∨ x[piece2, (Pos2)] ∨ x[piece2, (Pos3)]  ∨ (...))
+                                clause.append(x[id2, x2, y2]) # ((...) ∨ x[piece2, (Pos2)] ∨ x[piece2, (Pos3)]  ∨ (...))
                         clauses.append(clause) # (¬x[piece1, (Pos1)] ∨ x[piece2, (Pos2)] ∨ (...)) ∧ (...) ∧ (¬x[piece2, (Pos1)] ∨ x[piece3, (Pos2)]
     
     # Try solve and if SAT print
@@ -175,7 +162,14 @@ def overlap(size1, x1, y1, size2, x2, y2):
     goodOnY = (y1 + size1 <= y2) or (y2 + size2 <= y1)
     return not (goodOnX or goodOnY)
 
+print("Tiling Problem(5, 9, 7):")
+
+print("Direct:")
 TillingProblemDirect(5, 9, 7)
+
+print("Support:")
+TillingProblemSupport(5, 9, 7)
+
 
 # print("Para problema n = 200")
 # Pigeonhole(200)
