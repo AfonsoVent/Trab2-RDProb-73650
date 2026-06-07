@@ -1,8 +1,14 @@
 import clingo
 import math
 import sys
+#TODO: Se a dim for 1..12 => tem 13 para colocar aidna
+def pack(ctl, w, h):
+    # Define dimensions of board
+    ctl.ground([("dim", [
+                clingo.Number(w), 
+                clingo.Number(h)])
+    ])
 
-def pack(ctl, n, w, h):
     # Call
     ctl.assign_external(
         clingo.Function("boardSize", [
@@ -11,7 +17,7 @@ def pack(ctl, n, w, h):
         True)
     
     placements = []
-    sat = True
+    sat = False
 
     # Try solve
     with ctl.solve(yield_=True) as handle:
@@ -64,7 +70,7 @@ def solverPrinter(placements, maxW, maxH):
     
     # Print grid
     for hIdx in range(maxH):
-        rowStr = f"{hIdx} | "
+        rowStr = f"{hIdx + 1} | "
         for wIdx in range(maxW):
             rowStr += f"{grid[hIdx][wIdx]} "
         print(rowStr)
@@ -73,7 +79,7 @@ def minPack(n):
     ctl = clingo.Control()
     ctl.load("Group2.lp")
     
-    # Base
+    # Base - n never changes, we only need 1 time
     ctl.add("base", [], f"#const n={n}.")
     ctl.ground([("base", [])])
 
@@ -110,7 +116,7 @@ def minPack(n):
             # Debug
             print("Valid candidate found.") 
             print(f"Testing with area: {area} | Dimensions: {w_cand} x {h_cand}")
-            if pack(ctl, n, w_cand, h_cand):
+            if pack(ctl, w_cand, h_cand):
                 # if - True; optimal solution found
                 print(f"Minimum area: {area}")
                 print(f"Dimensions: {w_cand} x {h_cand}")
