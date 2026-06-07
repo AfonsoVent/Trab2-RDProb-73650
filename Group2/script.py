@@ -1,7 +1,7 @@
 import clingo
 import math
 import sys
-#TODO: Se a dim for 1..12 => tem 13 para colocar aidna
+
 def pack(ctl, w, h):
     # Define dimensions of board
     ctl.ground([("dim", [
@@ -29,6 +29,7 @@ def pack(ctl, w, h):
                     # Extract ints
                     p, x, y = [arg.number for arg in symbol.arguments]
                     placements.append((p, x, y))
+            break
         
         # Save result
         result = handle.get()

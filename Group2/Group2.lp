@@ -1,27 +1,30 @@
 #program base.
 
+% Define place(Piece, PosX, PosY)
+#defined place/3.
+
 % Define (n) pieces
 piece(1..n).
 
-% Define limits - Script already decremented
+% Define limits
 #program dim(w, h).
-limW(0..w).
-limH(0..h).
 
 % Will change - external
 #external boardSize(w, h).
 
-% Auxiliar predicaded - safe: has on body positive pred(X)
-position(X, Y) :- limW(X), limH(Y).
+% Auxiliar predicaded
+position(w, h, X, Y) :- boardSize(w, h), 
+                        X = 0..(w - 1), 
+                        Y = 0..(h - 1).
 
 % AL1: Each piece needs to be somewhere -> min: 1
 % AM1: Each piece can't be in two places -> max: 1
 % (Each Piece has) {1} (position)
-1 { place(P, X, Y) : position(X, Y) } 1 :- piece(P).
+1 { place(P, X, Y) : position(w, h, X, Y) } 1 :- piece(P), boardSize(w, h).
 
 % The pieces *can't be* outside of the board - Write in negation
-:- place(P, X, _Y), w < P + X.
-:- place(P, _X, Y), h < P + Y.
+:- place(P, X, _Y), boardSize(w, h), w < P + X.
+:- place(P, _X, Y), boardSize(w, h), h < P + Y.
 
 % Conflict Clauses: 
 % 2 pieces *can't be* overleaping - Write in negation
