@@ -1,6 +1,6 @@
 #program base.
 
-% Define place(Piece, PosX, PosY)
+% Define place(Width, Height, Piece, PosX, PosY)
 #defined place/5.
 
 % Define (n) pieces

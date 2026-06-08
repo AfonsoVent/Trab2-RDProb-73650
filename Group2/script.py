@@ -137,4 +137,3 @@ if __name__ == "__main__":
     # minPack(8)
     # minPack(9)
     minPack(10)
-    # minPack(11)

@@ -191,7 +191,6 @@ def overlap(size1, x1, y1, size2, x2, y2):
 # problemN = 8
 # problemN = 9
 # problemN = 10
-# problemN = 11
-problemN = 12
+problemN = 11
 print(f"Optimal Support Enconding Tiling Problem n={problemN}")
 minPack(problemN)
