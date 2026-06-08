@@ -80,7 +80,7 @@ def TillingProblemDirect(n, maxW, maxH):
                         for h2 in range(maxH - id2 + 1):
                             # ... check if collide
                             if overlap(id1, w1, h1, id2, w2, h2):
-                                # Then express Conflict Clauses → [Pairwise Enconding Logic]
+                                # Then express Conflict Clauses
                                 clauses.append([-x[id1, w1, h1], -x[id2, w2, h2]])
     
     # Try solve and if SAT print
