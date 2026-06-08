@@ -181,10 +181,15 @@ def overlap(size1, w1, h1, size2, w2, h2):
 # print("Direct:")
 # TillingProblemDirect(5, 9, 7)
 
+# problemN = 3
+# problemN = 4
+# problemN = 5
+# problemN = 6
+# problemN = 7
+# problemN = 8
+# problemN = 9
+# problemN = 10
 # problemN = 11
 problemN = 12
-# problemN = 13
-# problemN = 14
-# problemN = 15
 print(f"Optimal Direct Enconding Tiling Problem n={problemN}")
 minPack(problemN)

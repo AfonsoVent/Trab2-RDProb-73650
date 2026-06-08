@@ -164,7 +164,7 @@ def solverPrinter(clauses, x, maxW, maxH):
             
             # Print grid
             for hIdx in range(maxH):
-                rowStr = f"{hIdx} | "
+                rowStr = f"{hIdx + 1} | "
                 for wIdx in range(maxW):
                     rowStr += f"{grid[hIdx][wIdx]} "
                 print(rowStr)
@@ -178,11 +178,20 @@ def overlap(size1, x1, y1, size2, x2, y2):
     goodOnY = (y1 + size1 <= y2) or (y2 + size2 <= y1)
     return not (goodOnX or goodOnY)
 
+# Testes
+# print("Tiling Problem(5, 9, 7):")
+# print("Support:")
+# TillingProblemSupport(5, 9, 7)
 
+# problemN = 3
+# problemN = 4
+# problemN = 5
+# problemN = 6
+# problemN = 7
+# problemN = 8
+# problemN = 9
+# problemN = 10
 # problemN = 11
 problemN = 12
-# problemN = 13
-# problemN = 14
-# problemN = 15
 print(f"Optimal Support Enconding Tiling Problem n={problemN}")
 minPack(problemN)
