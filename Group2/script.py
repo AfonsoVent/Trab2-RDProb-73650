@@ -25,9 +25,9 @@ def pack(ctl, w, h):
             sat = True
             
             for symbol in model.symbols(shown=True):
-                if symbol.name == "place": # place(P, X, Y)
+                if symbol.name == "place": # place(_w, _h, P, X, Y)
                     # Extract ints
-                    p, x, y = [arg.number for arg in symbol.arguments]
+                    _,_, p, x, y = [arg.number for arg in symbol.arguments]
                     placements.append((p, x, y))
             break
         
