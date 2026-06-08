@@ -6,7 +6,7 @@ import math
 import sys
 
 # (Project 1)
-def min_pack(n):
+def minPack(n):
     # (Theorical) Min area: [Ei²] - sum(1^2 + (...) + n^2)
     min_area = sum(i**2 for i in range(1, n + 1))
 
@@ -176,12 +176,15 @@ def overlap(size1, w1, h1, size2, w2, h2):
     goodOnY = (h1 + size1 <= h2) or (h2 + size2 <= h1)
     return not (goodOnX or goodOnY)
 
-print("Tiling Problem(5, 9, 7):")
+# Tests
+# print("Tiling Problem(5, 9, 7):")
+# print("Direct:")
+# TillingProblemDirect(5, 9, 7)
 
-print("Direct:")
-TillingProblemDirect(5, 9, 7)
-
-print("Optimal Tiling Problem(5, 9, 7):")
-
-print("Direct:")
-min_pack(5)
+# problemN = 11
+problemN = 12
+# problemN = 13
+# problemN = 14
+# problemN = 15
+print(f"Optimal Direct Enconding Tiling Problem n={problemN}")
+minPack(problemN)

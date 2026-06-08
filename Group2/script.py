@@ -129,4 +129,4 @@ def minPack(n):
         print(f"With area: {area} none combination didn't worked")
 
 if __name__ == "__main__":
-    minPack(5)
+    minPack(9)

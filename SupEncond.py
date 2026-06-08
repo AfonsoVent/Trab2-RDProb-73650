@@ -2,6 +2,54 @@ from pysat.formula import CNF, IDPool
 from pysat.card import CardEnc, EncType
 from pysat.solvers import Glucose42
 
+import math
+import sys
+
+# (Project 1)
+def minPack(n):
+    # (Theorical) Min area: [Ei²] - sum(1^2 + (...) + n^2)
+    min_area = sum(i**2 for i in range(1, n + 1))
+
+    # Slowly incresing the area to pack()
+    for area in range(min_area, min_area * 2):
+        candidates = []
+        
+        # (Theorical) Creating candidates
+        for h in range(n, int(math.sqrt(area)) + 1):
+            # The value must be entire number
+            if area % h == 0:
+                w = area // h
+
+                # (Theorical) (Width >= Height) and (Width >= n) and (Height >= n):
+                if w >= h and h >= n:
+                    # (Theorical) k = [(H + 1) / 2].floor()
+                    k = math.floor((h + 1) / 2)
+
+                    # Creating the Theorical Value: (Ej)
+                    sum_j = sum(j for j in range(k, n + 1))
+
+                    # (Theorical) Width >= (Ej)
+                    if w >= sum_j: candidates.append((w, h))
+
+        # Sort candidates[Weigth, Heigth]
+        candidates.sort(key=lambda x: x[1])
+
+        # Test candidates
+        for w_cand, h_cand in candidates:
+            # Debug
+            print("Valid candidate found.") 
+            print(f"Testing with area: {area} | Dimensions: {w_cand} x {h_cand}")
+            if TillingProblemSupport(n, w_cand, h_cand):
+                # if - True; optimal solution found
+                print(f"Minimum area: {area}")
+                print(f"Dimensions: {w_cand} x {h_cand}")
+                sys.exit(0)
+            else:
+                # Debug
+                print(f"Failed with Dimensions: {w_cand} x {h_cand}")
+        # Debug
+        print(f"With area: {area} none combination didn't worked")
+
 # Support Enconding
 def TillingProblemSupport(n, maxW, maxH):
     clauses = []
@@ -37,7 +85,7 @@ def TillingProblemSupport(n, maxW, maxH):
                         clauses.append(clause) # (¬x[piece1, (Pos1)] ∨ x[piece2, (Pos2)] ∨ (...)) ∧ (...) ∧ (¬x[piece2, (Pos1)] ∨ x[piece3, (Pos2)]
     
     # Try solve and if SAT print
-    solverPrinter(clauses, x, maxW, maxH)
+    return solverPrinter(clauses, x, maxW, maxH)
 
 
 def AL1(clauses, x, n, maxW, maxH):
@@ -120,6 +168,9 @@ def solverPrinter(clauses, x, maxW, maxH):
                 for wIdx in range(maxW):
                     rowStr += f"{grid[hIdx][wIdx]} "
                 print(rowStr)
+            
+            return True
+        return False
 
 # check if collide
 def overlap(size1, x1, y1, size2, x2, y2):
@@ -127,7 +178,11 @@ def overlap(size1, x1, y1, size2, x2, y2):
     goodOnY = (y1 + size1 <= y2) or (y2 + size2 <= y1)
     return not (goodOnX or goodOnY)
 
-print("Tiling Problem(5, 9, 7):")
 
-print("Support:")
-TillingProblemSupport(5, 9, 7)
+# problemN = 11
+problemN = 12
+# problemN = 13
+# problemN = 14
+# problemN = 15
+print(f"Optimal Support Enconding Tiling Problem n={problemN}")
+minPack(problemN)

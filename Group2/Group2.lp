@@ -9,7 +9,7 @@ piece(1..n).
 % Define limits
 #program dim(w, h).
 
-% Will change - external
+% Will change - switches / external
 #external boardSize(w, h).
 
 % Auxiliar predicaded
